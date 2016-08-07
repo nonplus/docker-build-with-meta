@@ -1,6 +1,6 @@
 {
   "name": "build-project-with-meta",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "docker build + git",
   "main": "index.js",
   "scripts": {
