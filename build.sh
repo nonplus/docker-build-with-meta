@@ -66,3 +66,10 @@ docker build -t $org/$name:$tag \
   --label "released-by=`git config --get user.name`" \
   `pwd`
 
+if [[ "$publish" == "1" ]]
+then
+  echo ""
+  chalk -t "{red Publishing {green $org/$name:{bold $tag}} image to registry}"
+  docker push $org/$name:$tag
+fi
+
