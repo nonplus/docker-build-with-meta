@@ -54,11 +54,11 @@ then
   exit 1
 fi
 
-
 chalk -t "Building {green $org/$name:{bold $tag}} version {blue.bold $version} using {blue.bold $active} docker machine"
 
 docker build -t $org/$name:$tag \
   --label "version=$version" \
+  --label "project=$name" \
   --label "commit-msg=`git log -1 --pretty=%s`" \
   --label "commit-sha=`git rev-parse --short HEAD`" \
   --label "commit-author=`git log -1 --pretty='%an <%ae>'`" \
