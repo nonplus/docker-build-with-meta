@@ -42,17 +42,27 @@ while getopts "hpt:n:" opt; do
   esac
 done
 
+active=$(docker-machine active)
+activeResult=$!;
+
+if [[ $activeResult -eq 0 ]]; then
+    isSwarm=$(docker-machine inspect $active | json HostOptions.SwarmOptions.IsSwarm)
+
+    if [[ "true" == "$isSwarm" ]]
+    then
+        chalk -t "{red Attempt to build on swarm.} Switch to {bold dev machine} to build."
+        exit 1
+    fi
+else
+    osType=$(uname -s);
+    if [[ ! $osType = "Linux" ]]; then
+        chalk -t "{red No active host found.} Switch to {bold dev machine} to build."
+        exit 1
+    fi
+fi
+
 set -e
 
-active=$(docker-machine active)
-
-isSwarm=$(docker-machine inspect $active | json HostOptions.SwarmOptions.IsSwarm)
-
-if [[ "true" == "$isSwarm" ]]
-then
-  chalk -t "{red Attempt to build on swarm.} Switch to {bold dev machine} to build."
-  exit 1
-fi
 
 chalk -t "Building {green $org/$name:{bold $tag}} version {blue.bold $version} using {blue.bold $active} docker machine"
 
