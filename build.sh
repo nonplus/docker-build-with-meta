@@ -48,9 +48,9 @@ while getopts "a:hpt:n:" opt; do
 done
 
 active=$(docker-machine active)
-activeResult=$!;
+activeResult=$?;
 
-if [[ ! -z $activeResult ]]; then
+if [[ $activeResult -eq 0 ]]; then
   isSwarm=$(docker-machine inspect $active | json HostOptions.SwarmOptions.IsSwarm)
 
   if [[ "true" == "$isSwarm" ]]
