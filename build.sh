@@ -60,7 +60,7 @@ if [[ $activeResult -eq 0 ]]; then
   fi
 else
   osType=$(uname -s);
-  if [[ ! "$osType" == "Linux" ]]; then
+  if [[ ! ("$osType" == "Linux" || "$osType" == "Darwin") ]]; then
     chalk -t "{red No active host found.} Switch to {bold dev machine} to build."
     exit 1
   fi
