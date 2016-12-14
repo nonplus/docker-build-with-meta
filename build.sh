@@ -4,6 +4,7 @@ version=$(cat `pwd`/package.json | json version)
 name=$(cat `pwd`/package.json | json name)
 org=$(cat `pwd`/package.json | json organisation)
 alias=""
+vars=""
 tag=latest
 publish=0
 
@@ -21,13 +22,14 @@ All arguments are optional:
   -t TAG     project tag (default to latest)
   -a ALIAS   alias tag (docker tag :tag :alias)
   -p         whether publish to registry (not published when omitted)
+  -v VALUE   set docker build-time variables
   -h         display usage info
 
 EOF
 
 }
 
-while getopts "a:hpt:n:" opt; do
+while getopts "a:hpt:n:v:" opt; do
   case $opt in
     a)
       alias=$OPTARG
@@ -40,6 +42,10 @@ while getopts "a:hpt:n:" opt; do
       ;;
     p)
       publish=1
+      ;;
+    v)
+      vars+=" --build-arg "
+      vars+=$OPTARG
       ;;
     h)
       usage >&2
@@ -70,7 +76,7 @@ set -e
 
 chalk -t "Building {green $org/$name:{bold $tag}} version {blue.bold $version} using {blue.bold $active} docker machine"
 
-docker build -t $org/$name:$tag \
+docker build -t $org/$name:$tag $vars\
   --label "version=$version" \
   --label "project=$name" \
   --label "commit-msg=`git log -1 --pretty=%s`" \
